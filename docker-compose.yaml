@@ -1,0 +1,24 @@
+services:
+  bot_a:
+    image: transcendentalguy/bot_a
+    container_name: bot_a
+    environment:
+      - BOT_NAME=Bot_A
+      - OTHER_BOT_URL=http://bot_b:8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./logs/bot_a:/app/logs
+
+  bot_b:
+    image: transcendentalguy/bot_b
+    container_name: bot_b
+    environment:
+      - BOT_NAME=Bot_B
+      - OTHER_BOT_URL=http://bot_a:8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./logs/bot_b:/app/logs
