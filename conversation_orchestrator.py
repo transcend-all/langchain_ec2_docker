@@ -2,9 +2,13 @@
 
 import requests
 import time
+import os
 
-bot_a_url = "http://localhost:8001/message"
-bot_b_url = "http://localhost:8002/message"
+bot_a_ip = os.getenv("BOT_A_IP")
+bot_b_ip = os.getenv("BOT_B_IP")
+
+bot_a_url = f"http://{bot_a_ip}:8000/message"
+bot_b_url = f"http://{bot_b_ip}:8000/message"
 
 initial_message = "Hello, who are you?"
 current_message = initial_message
