@@ -18,40 +18,35 @@ for i in range(ROUNDS):
         if current_bot == "A":
             print(f"\n👉 Sending to Bot A: {current_message}")
             res = requests.post(bot_a_url, json={"message": current_message})
-            res.raise_for_status()
-            try:
-                print(f"Raw response: {res.text}")
-                response = res.json()["response"]
-            except Exception as e:
-                print(f"Error parsing JSON response: {e}")
-                break
-            transcript.append(("Bot_A", response))
-            current_bot = "B"
         else:
             print(f"\n👉 Sending to Bot B: {current_message}")
             res = requests.post(bot_b_url, json={"message": current_message})
-            res.raise_for_status()
-            try:
-                print(f"Raw response: {res.text}")
-                response = res.json()["response"]
-            except Exception as e:
-                print(f"Error parsing JSON response: {e}")
-                break
-            transcript.append(("Bot_B", response))
-            current_bot = "A"
 
+        res.raise_for_status()
+        try:
+            print(f"Raw response: {res.text}")
+            response = res.json()["response"]
+        except Exception as e:
+            print(f"Error parsing JSON response: {e}")
+            break
+
+        speaker = "Bot_A" if current_bot == "A" else "Bot_B"
+        transcript.append((speaker, response))
+
+        # Prepare for next round
         current_message = response
-        time.sleep(1)  # short pause between rounds
+        current_bot = "B" if current_bot == "A" else "A"
+
+        time.sleep(1)  # Short pause between rounds
+
     except Exception as e:
         print(f"Error during round {i+1}: {e}")
         break
 
-print(f"✅ Bot {current_bot} responded: {response}")
+print(f"\n✅ Final: Bot {current_bot} responded last: {response}")
 print(f"Status: {res.status_code}")
 
 # Print transcript
 print("\n📜 Conversation Transcript:")
 for speaker, line in transcript:
     print(f"{speaker}: {line}")
-
-

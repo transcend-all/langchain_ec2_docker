@@ -1,23 +1,20 @@
-# Dockerfile
-FROM python:3.10-slim
+# Use an official lightweight Python image
+FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set work directory
+# Set working directory
 WORKDIR /app
 
+# Copy requirements.txt first for better caching
+COPY requirements.txt .
+
 # Install dependencies
-COPY requirements.txt /app/requirements.txt
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . /app
+# Copy the rest of the application
+COPY . .
 
-# Expose port
+# Expose port (Uvicorn default)
 EXPOSE 8000
 
-# Command to run the application
+# Command to run the app
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,23 +1,25 @@
+version: '3.8'
+
 services:
   bot_a:
-    image: transcendentalguy/bot_a
+    build:
+      context: ./bot_a  # Assuming you have the bot_a code here
     container_name: bot_a
     environment:
       - BOT_NAME=Bot_A
       - OTHER_BOT_URL=http://bot_b:8000
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - "8001:8000"
     volumes:
       - ./logs/bot_a:/app/logs
 
   bot_b:
-    image: transcendentalguy/bot_b
+    build:
+      context: ./bot_b  # Assuming you have the bot_b code here
     container_name: bot_b
     environment:
       - BOT_NAME=Bot_B
       - OTHER_BOT_URL=http://bot_a:8000
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - "8002:8000"
     volumes:
